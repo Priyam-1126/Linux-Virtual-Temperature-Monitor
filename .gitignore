@@ -1,0 +1,26 @@
+# Build files
+*.o
+*.out
+*.ko
+*.mod
+*.mod.c
+modules.order
+Module.symvers
+
+# Build folders
+build/
+
+# Editor files
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.swp
+
+# Logs generated during local testing
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
