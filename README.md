@@ -4,9 +4,9 @@ A small Linux and C++ project based on the Wipro training topics.
 
 ## Project idea
 
-The project uses a virtual temperature sensor. A Linux character device driver will provide the device interface, and a C++ application will read the temperature and show the status.
+The project uses a virtual temperature sensor. A Linux character device driver will provide the device interface, and a C++ application will read the temperature and show the current status.
 
-The planned system will also give a simple warning when the temperature goes above a set limit and keep a basic log.
+The system will also give a simple warning when the temperature goes above a set limit and keep a basic log.
 
 ## Main parts
 
@@ -34,11 +34,17 @@ The planned system will also give a simple warning when the temperature goes abo
 5. Testing, Integration and Improvement
 6. Final Implementation and Presentation
 
-## Current status
+## Progress
 
-**Day 2 completed.**
+### Day 1 — Stage 1
+Project introduction, problem statement, objective, scope and expected outcome were prepared.
 
-At this point the project only has the introduction, requirements and development plan. Coding and testing will be done in the later stages.
+### Day 2 — Stage 2
+Project requirements, main modules, deliverables and development plan were prepared.
+
+### Day 3 — Stage 3
+The basic architecture, component responsibilities, data structures and implementation flow were planned. Initial Class, Sequence and State Machine UML designs were also prepared.
+
 
 ## Folder structure
 
@@ -46,8 +52,14 @@ At this point the project only has the introduction, requirements and developmen
 Linux-Virtual-Temperature-Monitor/
 ├── docs/
 │   ├── day-01/
-│   └── day-02/
+│   ├── day-02/
+│   └── day-03/
 ├── progress/
+├── src/          # added during implementation
+├── driver/       # added during driver implementation
+├── tests/        # added during testing
+├── screenshots/  # project evidence
 ├── README.md
 └── .gitignore
 ```
+
