@@ -10,6 +10,6 @@
 
 ## Current Status
 Stage 3 design is in progress.
-
+ 
 ## Next Step
 Start Stage 4 with the basic C++ prototype and then build the Linux device interface.

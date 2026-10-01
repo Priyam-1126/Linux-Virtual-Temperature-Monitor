@@ -1,4 +1,4 @@
-# Day 5 – Character Driver
+# Stage 5– Character Driver
 
 The driver is a small Linux character device module.
 

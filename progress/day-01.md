@@ -1,6 +1,6 @@
 # Day 1 Progress
 
-**Date:** 28 September 2026  
+ 
 **Stage:** Stage 1 - Project Introduction
 
 ## Work done

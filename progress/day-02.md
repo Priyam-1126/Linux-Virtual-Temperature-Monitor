@@ -1,6 +1,5 @@
 # Day 2 Progress
 
-**Date:** 29 September 2026  
 **Stage:** Stage 2 - Project Requirements and Development Plan
 
 ## Work done
