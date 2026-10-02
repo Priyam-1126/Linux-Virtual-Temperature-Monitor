@@ -1,6 +1,5 @@
 # Day 1 - Stage 1: Project Introduction
 
-**Date:** 28 September 2026
 
 ## Project Title
 
@@ -49,9 +48,6 @@ The project is a simple example of how a Linux application can get data from a d
 - g++ and Make
 - Git / GitHub
 
-## Day 1 Note
-
-Today the project idea, scope and main objective were finalized. No implementation was done.
 
 ## Next Step
 

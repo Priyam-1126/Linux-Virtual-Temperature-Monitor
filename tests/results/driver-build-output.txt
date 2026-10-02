@@ -1,0 +1,10 @@
+priyam@ubuntu:~/Linux-Virtual-Temperature-Monitor/driver$ make -C /usr/src/linux-headers-6.12.96+deb13-amd64 M=/home/priyam/Linux-Virtual-Temperature-Monitor/driver modules
+make[1]: Entering directory '/usr/src/linux-headers-6.12.96+deb13-amd64'
+  CC [M]  /home/priyam/Linux-Virtual-Temperature-Monitor/driver/virtual_temperature.o
+  MODPOST /home/priyam/Linux-Virtual-Temperature-Monitor/driver/Module.symvers
+  CC [M]  /home/priyam/Linux-Virtual-Temperature-Monitor/driver/virtual_temperature.mod.o
+  CC [M]  /home/priyam/Linux-Virtual-Temperature-Monitor/driver/.module-common.o
+  LD [M]  /home/priyam/Linux-Virtual-Temperature-Monitor/driver/virtual_temperature.ko
+  BTF [M] /home/priyam/Linux-Virtual-Temperature-Monitor/driver/virtual_temperature.ko
+make[1]: Leaving directory '/usr/src/linux-headers-6.12.96+deb13-amd64'
+priyam@ubuntu:~/Linux-Virtual-Temperature-Monitor/driver$ 

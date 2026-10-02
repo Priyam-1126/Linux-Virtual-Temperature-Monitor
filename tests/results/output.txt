@@ -1,0 +1,42 @@
+
+==============================================
+ Linux Virtual Temperature Monitor
+==============================================
+Source: SIMULATED_SENSOR
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: Temperature : 28.0 C
+Source      : SIMULATED_SENSOR
+Status      : NORMAL
+Threshold   : 50.0 C
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: Enter new temperature (C): Temperature updated.
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: Temperature : 65.0 C
+Source      : SIMULATED_SENSOR
+Status      : WARNING
+Threshold   : 50.0 C
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: Device source : SIMULATED_SENSOR
+Available     : YES
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: 

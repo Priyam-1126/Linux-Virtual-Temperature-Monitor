@@ -1,6 +1,6 @@
 # Day 2 - Stage 2: Project Requirements and Development Plan
 
-**Date:** 29 September 2026
+
 
 ## Functional Requirements
 
@@ -75,9 +75,7 @@ Optional features will only be added if the main project is working first.
 | Stage 5 | Testing, integration and improvement |
 | Stage 6 | Final implementation and presentation |
 
-## Day 2 Note
 
-Today the main requirements, modules and development plan were written. 
 
 ## Next Step
 

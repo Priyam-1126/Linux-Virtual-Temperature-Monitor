@@ -1,0 +1,16 @@
+priyam@ubuntu:~/Linux-Virtual-Temperature-Monitor$ ./run_tests.sh
+
+Linux Virtual Temperature Monitor - Test Results
+================================================
+
+[1/7] C++ build
+      PASS
+
+[2/7] Alert unit tests
+      PASS
+
+...
+
+Test execution completed.
+
+priyam@ubuntu:~/Linux-Virtual-Temperature-Monitor$

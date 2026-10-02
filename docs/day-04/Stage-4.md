@@ -64,8 +64,3 @@ driver/
 └── Makefile
 ```
 
-## Development Note
-The application supports simulation so the core C++ logic can be checked without loading the kernel module. The real device mode is kept for the Linux environment where the driver can be loaded and accessed.
-
-## Next Step
-Connect the application with the device interface and continue with integration and testing.
