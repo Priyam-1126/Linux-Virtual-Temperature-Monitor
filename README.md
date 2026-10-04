@@ -1,6 +1,6 @@
 # Linux-Based Virtual Temperature Monitoring System
 
-A small Linux and C++ project developed as a Wipro training project.
+A small Linux and C++ project developed as a capstone project.
 
 The main idea is simple: a temperature value is provided by a virtual sensor, the C++ application reads it, checks a limit, and shows the current status. A Linux character device driver is included to demonstrate how a user-space application can communicate with a device interface.
 
