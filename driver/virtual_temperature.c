@@ -1,4 +1,9 @@
-// Linux Virtual Temperature  Device Driver
+// Linux Virtual Temperature Device Driver
+//
+// A character device that keeps one temperature value (whole degrees Celsius)
+// in kernel memory.
+//   read  -> returns the value as text, e.g. "28\n"
+//   write -> accepts a whole number such as "65" (range -50 to 150)
 
 #include <linux/cdev.h>
 #include <linux/device.h>
@@ -7,6 +12,7 @@
 #include <linux/module.h>
 #include <linux/mutex.h>
 #include <linux/uaccess.h>
+#include <linux/version.h>
 
 #define DRIVER_NAME "virtual_temperature"
 #define CLASS_NAME "vtemp"
@@ -40,17 +46,21 @@ static ssize_t vtemp_read(struct file *file, char __user *user_buffer,
     char buffer[BUFFER_SIZE];
     int len;
 
+
+    if (*offset > 0)
+        return 0;
+
     mutex_lock(&vtemp_mutex);
     len = scnprintf(buffer, sizeof(buffer), "%d\n", temperature);
     mutex_unlock(&vtemp_mutex);
 
-    if (count < len)
+    if (count < (size_t)len)
         return -EINVAL;
 
     if (copy_to_user(user_buffer, buffer, len))
         return -EFAULT;
 
-    *offset = 0;
+    *offset += len;
     return len;
 }
 
@@ -94,6 +104,11 @@ static int __init vtemp_init(void)
 {
     int ret;
 
+    if (temperature < -50 || temperature > 150) {
+        pr_err(DRIVER_NAME ": initial temperature must be between -50 and 150\n");
+        return -EINVAL;
+    }
+
     ret = alloc_chrdev_region(&device_number, 0, 1, DRIVER_NAME);
     if (ret < 0)
         return ret;
@@ -105,7 +120,11 @@ static int __init vtemp_init(void)
     if (ret < 0)
         goto unregister_region;
 
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 4, 0)
     vtemp_class = class_create(CLASS_NAME);
+#else
+    vtemp_class = class_create(THIS_MODULE, CLASS_NAME);
+#endif
     if (IS_ERR(vtemp_class))
     {
         ret = PTR_ERR(vtemp_class);

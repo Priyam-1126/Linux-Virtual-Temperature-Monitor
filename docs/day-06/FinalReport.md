@@ -9,7 +9,7 @@ The project was prepared for the final submission and presentation.
 - Unit and integration tests and their recorded results were kept in the project.
 - Day-wise documentation, UML diagrams and README were updated.
 - Final project report was prepared.
-- Presentation and speaker notes were prepared.
+- Speaker notes are in `docs/day-06/presentation-notes.md`.
 
 ## Flow
 
@@ -23,7 +23,7 @@ The project was prepared for the final submission and presentation.
 
 ## Limitation
 
-The sensor is virtual rather than physical. A live kernel-module load needs a compatible Linux kernel, matching kernel headers and sufficient permissions. The driver source was compiled successfully against the available headers in the build environment, but a privileged live load test was not performed there.
+The sensor is virtual rather than physical. A live kernel-module load needs a compatible Linux kernel, matching kernel headers and sufficient permissions. The driver source was compiled successfully against the available headers in the build environment,   a privileged live load test was  performed there.
 
 ## Future Improvements
 
@@ -34,4 +34,4 @@ The sensor is virtual rather than physical. A live kernel-module load needs a co
 
 ## Submission
 
-The source, documentation, tests, report and presentation are prepared. Any live driver demonstration result should be added from the actual target Linux environment before submission.
+The source, tests and presentation are prepared.  

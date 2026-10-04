@@ -1,0 +1,141 @@
+Local execution output 
+==============================================================
+
+$ make
+g++ -std=c++17 -Wall -Wextra -Wpedantic -Iinclude -MMD -MP -c src/main.cpp -o build/src/main.o
+g++ -std=c++17 -Wall -Wextra -Wpedantic -Iinclude -MMD -MP -c src/alert_manager.cpp -o build/src/alert_manager.o
+g++ -std=c++17 -Wall -Wextra -Wpedantic -Iinclude -MMD -MP -c src/logger.cpp -o build/src/logger.o
+g++ -std=c++17 -Wall -Wextra -Wpedantic -Iinclude -MMD -MP -c src/simulated_sensor.cpp -o build/src/simulated_sensor.o
+g++ -std=c++17 -Wall -Wextra -Wpedantic -Iinclude -MMD -MP -c src/device_monitor.cpp -o build/src/device_monitor.o
+g++ -std=c++17 -Wall -Wextra -Wpedantic -Iinclude -MMD -MP build/src/main.o build/src/alert_manager.o build/src/logger.o build/src/simulated_sensor.o build/src/device_monitor.o -o build/temperature_monitor
+
+$ ./build/temperature_monitor --help
+Usage: temperature_monitor [--simulate] [--device PATH] [--log FILE]
+  --simulate    use the built-in simulated sensor
+  --device PATH use this device file (default /dev/virtual_temperature)
+  --log FILE    log file (default logs/temperature.log)
+
+$ printf "1\n2\n65\n1\n3\n4\n" | ./build/temperature_monitor --simulate
+
+==============================================
+ Linux Virtual Temperature Monitor
+==============================================
+Source: SIMULATED_SENSOR
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: Temperature : 28.0 C
+Source      : SIMULATED_SENSOR
+Status      : NORMAL
+Threshold   : 50.0 C
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: Enter new temperature (C): Temperature updated.
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: Temperature : 65.0 C
+Source      : SIMULATED_SENSOR
+Status      : WARNING
+Threshold   : 50.0 C
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: Device source : SIMULATED_SENSOR
+Available     : YES
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: 
+$ cat logs/temperature.log
+2026-10-04 17:47:17 | START | using simulated sensor
+2026-10-04 17:47:17 | READ | temperature=28.0C | status=NORMAL | source=SIMULATED_SENSOR
+2026-10-04 17:47:17 | SET | temperature=65C
+2026-10-04 17:47:17 | READ | temperature=65.0C | status=WARNING | source=SIMULATED_SENSOR
+2026-10-04 17:47:17 | STOP | application closed
+
+$ printf "2\nabc\n2\n200\n7\n4\n" | ./build/temperature_monitor --simulate   (wrong input)
+
+==============================================
+ Linux Virtual Temperature Monitor
+==============================================
+Source: SIMULATED_SENSOR
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: Enter new temperature (C): Invalid temperature.
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: Enter new temperature (C): Unable to set temperature: temperature must be between -50 C and 150 C
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: Please choose 1, 2, 3 or 4.
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: 
+$ ./build/temperature_monitor   (no driver loaded: automatic fallback)
+
+==============================================
+ Linux Virtual Temperature Monitor
+==============================================
+Note: cannot use /dev/virtual_temperature  . Using the simulated sensor.
+Source: SIMULATED_SENSOR
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: Temperature : 28.0 C
+Source      : SIMULATED_SENSOR
+Status      : NORMAL
+Threshold   : 50.0 C
+
+1. Read temperature
+2. Set temperature
+3. Device status
+4. Exit
+Choose: 
+$ make test
+g++ -std=c++17 -Wall -Wextra -Wpedantic -Iinclude -MMD -MP tests/test_core.cpp src/alert_manager.cpp src/logger.cpp src/simulated_sensor.cpp src/device_monitor.cpp -o build/test_core
+bash tests/run_tests.sh
+
+Linux Virtual Temperature Monitor - Test Results
+================================================
+
+[1/4] C++ build (make)
+      PASS
+
+[2/4] Unit tests (alert, logger, sensor, device code)
+      PASS
+
+[3/4] Integration test (simulation + bad input)
+      PASS
+
+[4/4] Device-interface test (file stand-in)
+      PASS
+
+
+
+Result: ALL TESTS PASSED

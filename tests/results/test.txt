@@ -1,16 +1,19 @@
-priyam@ubuntu:~/Linux-Virtual-Temperature-Monitor$ ./run_tests.sh
 
 Linux Virtual Temperature Monitor - Test Results
 ================================================
 
-[1/7] C++ build
+[1/4] C++ build (make)
       PASS
 
-[2/7] Alert unit tests
+[2/4] Unit tests (alert, logger, sensor, device code)
       PASS
 
-...
+[3/4] Integration test (simulation + bad input)
+      PASS
 
-Test execution completed.
+[4/4] Device-interface test (file stand-in)
+      PASS
 
-priyam@ubuntu:~/Linux-Virtual-Temperature-Monitor$
+Not covered here: loading the kernel driver (needs matching kernel headers and root).
+
+Result: ALL TESTS PASSED

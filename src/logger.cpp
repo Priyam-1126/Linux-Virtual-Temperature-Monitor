@@ -1,9 +1,10 @@
 #include "logger.hpp"
-#include <fstream>
-#include <filesystem>
+
 #include <chrono>
+#include <ctime>
+#include <filesystem>
+#include <fstream>
 #include <iomanip>
-#include <sstream>
 
 Logger::Logger(const std::string& filePath) : filePath_(filePath) {}
 
@@ -19,14 +20,11 @@ bool Logger::write(const std::string& message) {
             return false;
         }
 
-        const auto now = std::chrono::system_clock::now();
-        const std::time_t time = std::chrono::system_clock::to_time_t(now);
+        const std::time_t now = std::chrono::system_clock::to_time_t(
+            std::chrono::system_clock::now());
         std::tm tm{};
-#if defined(_WIN32)
-        localtime_s(&tm, &time);
-#else
-        localtime_r(&time, &tm);
-#endif
+        localtime_r(&now, &tm);
+
         out << std::put_time(&tm, "%Y-%m-%d %H:%M:%S") << " | " << message << '\n';
         return static_cast<bool>(out);
     } catch (...) {

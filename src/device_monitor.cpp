@@ -1,44 +1,55 @@
 #include "device_monitor.hpp"
+
 #include <fcntl.h>
 #include <unistd.h>
+
 #include <cerrno>
-#include <cstring>
+#include <cmath>
 #include <cstdlib>
+#include <cstring>
 #include <ctime>
-#include <algorithm>
+
+namespace {
+
+// Small helper: closes the file descriptor automatically (RAII).
+class FileDescriptor {
+public:
+    explicit FileDescriptor(int fd) : fd_(fd) {}
+    ~FileDescriptor() {
+        if (fd_ >= 0) {
+            close(fd_);
+        }
+    }
+    FileDescriptor(const FileDescriptor&) = delete;
+    FileDescriptor& operator=(const FileDescriptor&) = delete;
+
+    bool valid() const { return fd_ >= 0; }
+    int get() const { return fd_; }
+
+private:
+    int fd_;
+};
+
+} // namespace
 
 DeviceMonitor::DeviceMonitor(const std::string& devicePath)
-    : devicePath_(devicePath), fd_(-1) {}
-
-DeviceMonitor::~DeviceMonitor() {
-    if (fd_ >= 0) {
-        close(fd_);
-        fd_ = -1;
-    }
-}
-
-bool DeviceMonitor::ensureOpen(std::string& error) const {
-    if (fd_ >= 0) {
-        return true;
-    }
-
-    fd_ = open(devicePath_.c_str(), O_RDWR);
-    if (fd_ < 0) {
-        error = std::string("cannot open ") + devicePath_ + ": " + std::strerror(errno);
-        return false;
-    }
-    return true;
-}
+    : devicePath_(devicePath) {}
 
 bool DeviceMonitor::read(TemperatureReading& reading, std::string& error) {
-    if (!ensureOpen(error)) {
+    FileDescriptor fd(open(devicePath_.c_str(), O_RDONLY));
+    if (!fd.valid()) {
+        error = "cannot open " + devicePath_ + ": " + std::strerror(errno);
         return false;
     }
 
     char buffer[64]{};
-    const ssize_t count = ::read(fd_, buffer, sizeof(buffer) - 1);
+    const ssize_t count = ::read(fd.get(), buffer, sizeof(buffer) - 1);
     if (count < 0) {
         error = std::string("read failed: ") + std::strerror(errno);
+        return false;
+    }
+    if (count == 0) {
+        error = "device returned no data";
         return false;
     }
 
@@ -62,31 +73,39 @@ bool DeviceMonitor::writeTemperature(double temperature, std::string& error) {
         return false;
     }
 
-    if (!ensureOpen(error)) {
+    FileDescriptor fd(open(devicePath_.c_str(), O_WRONLY));
+    if (!fd.valid()) {
+        error = "cannot open " + devicePath_ + ": " + std::strerror(errno);
         return false;
     }
 
-    const std::string payload = std::to_string(temperature);
-    const ssize_t count = ::write(fd_, payload.c_str(), payload.size());
-    if (count < 0 || static_cast<std::size_t>(count) != payload.size()) {
+    // The driver reads a whole number (kstrtol), so we send an integer
+    // such as "65\n" and not "65.000000".
+    const std::string payload = std::to_string(std::lround(temperature)) + "\n";
+    const ssize_t count = ::write(fd.get(), payload.c_str(), payload.size());
+    if (count < 0) {
         error = std::string("write failed: ") + std::strerror(errno);
         return false;
     }
+    if (static_cast<std::size_t>(count) != payload.size()) {
+        error = "write was incomplete";
+        return false;
+    }
+    return true;
+}
 
+bool DeviceMonitor::probe(std::string& error) const {
+    FileDescriptor fd(open(devicePath_.c_str(), O_RDONLY));
+    if (!fd.valid()) {
+        error = std::strerror(errno);
+        return false;
+    }
     return true;
 }
 
 bool DeviceMonitor::available() const {
     std::string ignored;
-    if (fd_ >= 0) {
-        return true;
-    }
-    const int testFd = open(devicePath_.c_str(), O_RDWR);
-    if (testFd < 0) {
-        return false;
-    }
-    close(testFd);
-    return true;
+    return probe(ignored);
 }
 
 std::string DeviceMonitor::name() const {

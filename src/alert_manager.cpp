@@ -1,6 +1,4 @@
 #include "alert_manager.hpp"
-#include <sstream>
-#include <iomanip>
 
 AlertManager::AlertManager(double threshold) : threshold_(threshold) {}
 

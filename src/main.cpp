@@ -82,16 +82,30 @@ void setReading(TemperatureSource& source, Logger& logger) {
 
 int main(int argc, char* argv[]) {
     std::string devicePath = "/dev/virtual_temperature";
+    std::string logPath = "logs/temperature.log";
     bool forceSimulation = false;
 
     for (int i = 1; i < argc; ++i) {
         const std::string arg = argv[i];
         if (arg == "--simulate") {
             forceSimulation = true;
-        } else if (arg == "--device" && i + 1 < argc) {
+        } else if (arg == "--device") {
+            if (i + 1 >= argc) {
+                std::cerr << "--device needs a path\n";
+                return EXIT_FAILURE;
+            }
             devicePath = argv[++i];
+        } else if (arg == "--log") {
+            if (i + 1 >= argc) {
+                std::cerr << "--log needs a file path\n";
+                return EXIT_FAILURE;
+            }
+            logPath = argv[++i];
         } else if (arg == "--help") {
-            std::cout << "Usage: temperature_monitor [--simulate] [--device PATH]\n";
+            std::cout << "Usage: temperature_monitor [--simulate] [--device PATH] [--log FILE]\n"
+                      << "  --simulate    use the built-in simulated sensor\n"
+                      << "  --device PATH use this device file (default /dev/virtual_temperature)\n"
+                      << "  --log FILE    log file (default logs/temperature.log)\n";
             return EXIT_SUCCESS;
         } else {
             std::cerr << "Unknown argument: " << arg << "\n";
@@ -99,13 +113,14 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    Logger logger;
+    Logger logger(logPath);
     AlertManager alerts(50.0);
 
     std::unique_ptr<TemperatureSource> source;
+    std::string fallbackReason;
     if (!forceSimulation) {
         auto device = std::make_unique<DeviceMonitor>(devicePath);
-        if (device->available()) {
+        if (device->probe(fallbackReason)) {
             source = std::move(device);
         }
     }
@@ -118,6 +133,10 @@ int main(int argc, char* argv[]) {
     }
 
     printHeader();
+    if (!forceSimulation && !fallbackReason.empty()) {
+        std::cout << "Note: cannot use " << devicePath << " (" << fallbackReason
+                  << "). Using the simulated sensor.\n";
+    }
     std::cout << "Source: " << source->name() << "\n";
 
     while (true) {

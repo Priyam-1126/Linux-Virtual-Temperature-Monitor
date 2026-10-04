@@ -1,14 +1,15 @@
 CXX := g++
-CXXFLAGS := -std=c++17 -Wall -Wextra -Wpedantic -Iinclude -pthread
+CXXFLAGS := -std=c++17 -Wall -Wextra -Wpedantic -Iinclude -MMD -MP
 BUILD_DIR := build
 TARGET := $(BUILD_DIR)/temperature_monitor
+TEST_BIN := $(BUILD_DIR)/test_core
 
-SRC := src/main.cpp \
-       src/alert_manager.cpp \
-       src/logger.cpp \
-       src/simulated_sensor.cpp \
-       src/device_monitor.cpp
+APP_SRC := src/alert_manager.cpp \
+           src/logger.cpp \
+           src/simulated_sensor.cpp \
+           src/device_monitor.cpp
 
+SRC := src/main.cpp $(APP_SRC)
 OBJ := $(SRC:%.cpp=$(BUILD_DIR)/%.o)
 
 .PHONY: all clean run test
@@ -19,19 +20,22 @@ $(TARGET): $(OBJ)
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
+# -MMD -MP makes g++ write .d files, so changing a header rebuilds the right files
 $(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+$(TEST_BIN): tests/test_core.cpp $(APP_SRC)
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
 run: $(TARGET)
 	./$(TARGET) --simulate
 
-test: $(TARGET)
-	$(CXX) $(CXXFLAGS) tests/test_core.cpp src/alert_manager.cpp src/logger.cpp -o $(BUILD_DIR)/test_core
-	$(BUILD_DIR)/test_core
-	bash tests/integration_test.sh $(TARGET)
-	bash tests/device_interface_test.sh $(TARGET)
+test: $(TARGET) $(TEST_BIN)
+	bash tests/run_tests.sh
 
 clean:
 	rm -rf $(BUILD_DIR)
-	rm -f logs/temperature.log
+
+-include $(OBJ:.o=.d)

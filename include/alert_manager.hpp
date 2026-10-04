@@ -1,7 +1,6 @@
 #ifndef ALERT_MANAGER_HPP
 #define ALERT_MANAGER_HPP
 
-#include "temperature_reading.hpp"
 #include <string>
 
 class AlertManager {

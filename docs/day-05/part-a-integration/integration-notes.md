@@ -7,4 +7,4 @@ The C++ side has two sources:
 
 Both implement the same `TemperatureSource` interface.
 
-This keeps the application code simple while allowing the real driver to be connected later in a Linux VM.
+This keeps the application code simple while allowing the real driver to be connected   in a Linux VM.
